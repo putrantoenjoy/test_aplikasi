@@ -112,6 +112,16 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            // RaisedButton(
+            //     onPressed: () {
+            //       ///Navigasi
+            //     },
+            //     child: Text("Detail"),
+            //   ),
+            MaterialButton(
+              onPressed: () {},
+              child: Text('Register'),
+            )
           ],
         ),
       ),
