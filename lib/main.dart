@@ -61,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
               ),
             ),
+            const SizedBox(height: 10),
             TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Color.fromARGB(255, 65, 119, 199),
