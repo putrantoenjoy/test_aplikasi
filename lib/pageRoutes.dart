@@ -1,8 +1,8 @@
-class PageRoutes {
-  static const param1 = "param1";
-  static const param2 = "param2";
+// class PageRoutes {
+//   static const param1 = "param1";
+//   static const param2 = "param2";
 
-  static const linkHome = "/";
-  static const lnkRegister = "/register";
-  // static const linkSubDetail = "/SubDetail";
-}
+//   static const linkHome = "/";
+//   static const linkRegister = "/register";
+//   // static const linkSubDetail = "/SubDetail";
+// }
