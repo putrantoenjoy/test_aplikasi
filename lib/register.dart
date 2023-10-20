@@ -32,7 +32,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  List _listGender = ['Male', 'Female'];
+  // List _listGender = ['Male', 'Female'];
   // String _gender;
   final GlobalKey<FormState> _formKey = GlobalKey();
 
