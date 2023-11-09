@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test_aplikasi/register.dart';
+import 'package:test_aplikasi/auth/login.dart';
+// import 'package:test_aplikasi/register.dart';
+import 'package:test_aplikasi/auth/register.dart';
+// import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,49 +46,58 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image.asset('logo/logoSplash.png'),
+            const SizedBox(height: 42),
             TextButton(
               style: TextButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 65, 119, 199),
-              ),
-              onPressed: () {},
-              child: Text(
-                'Login',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 65, 119, 199),
+                fixedSize: const Size(307, 40),
+                backgroundColor: Color(0xff42a2e8),
               ),
               onPressed: () {
+                // Get.To();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const RegisterPage(title: "Register Page")));
+                            const LoginPage(title: "Login Page")));
               },
               child: Text(
-                'Register',
+                'Get Started',
                 style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
               ),
             ),
+            const SizedBox(height: 42),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Don't have account?"),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const RegisterPage(title: "Register Page")));
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(color: Color.fromARGB(255, 63, 63, 63)),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
