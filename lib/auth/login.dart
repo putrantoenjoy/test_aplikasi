@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test_aplikasi/auth/register.dart';
+import 'package:test_aplikasi/dashboard/home.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -152,14 +153,14 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Color(0xff42a2e8),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
-                      if (_controllerEmail == "bagus@gmail.com") {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RegisterPage(
-                                    title: "Register Page")));
-                      }
+                      // if (_formKey.currentState!.validate()) {}
+                      // if (_controllerEmail == "tes@gmail.com") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const HomePage(title: "Home Page")));
+                      // }
                     },
                     child: const Text(
                       "Login",

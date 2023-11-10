@@ -3,6 +3,7 @@ import 'package:test_aplikasi/auth/login.dart';
 // import 'package:test_aplikasi/register.dart';
 import 'package:test_aplikasi/auth/register.dart';
 // import 'package:get/get.dart';
+// import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
