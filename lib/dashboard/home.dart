@@ -39,21 +39,48 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 0.035),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.asset('logo/logoHome.png'),
           Container(
-            decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.all(Radius.circular(15))),
+            padding: EdgeInsets.only(top: 40, bottom: 40),
+            child: Image.asset('logo/logoHome.png'),
+          ),
+          Card(
+            margin: EdgeInsets.all(15),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  child: Text("Februari"),
+                  padding: EdgeInsetsDirectional.only(
+                    top: 20,
+                  ),
+                  child: Text(
+                    "Februari",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Container(
-                  child: Text("Ringkasan Presensi"),
-                )
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [Text("Ringkasan presensi")],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "10/23",
+                              textAlign: TextAlign.right,
+                            )
+                          ],
+                        )
+                      ],
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Text("Jaenal"),
+                ),
               ],
             ),
           ),

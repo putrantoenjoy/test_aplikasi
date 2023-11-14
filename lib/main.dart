@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Text(
                     'Sign Up',
-                    style: TextStyle(color: Color.fromARGB(255, 63, 63, 63)),
+                    style: TextStyle(color: Color(0xff42a2e8)),
                   ),
                 ),
               ],

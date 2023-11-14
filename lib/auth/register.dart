@@ -33,6 +33,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String errorTextVal = '';
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   final FocusNode _focusNodeEmail = FocusNode();
@@ -77,22 +78,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _controllerUsername,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
-                    labelText: "Username",
-                    prefixIcon: const Icon(Icons.person_outline),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
-                    ),
-                  ),
+                      labelText: "Username",
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
+                      ),
+                      errorText: errorTextVal.isEmpty ? null : errorTextVal),
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter username.";
-                      // } else if (_boxAccounts.containsKey(value)) {
-                      //   return "Username is already registered.";
+                      errorTextVal = 'Username salah';
                     }
 
                     return null;
