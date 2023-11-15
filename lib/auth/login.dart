@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 import 'package:test_aplikasi/auth/register.dart';
 import 'package:test_aplikasi/dashboard/home.dart';
 
