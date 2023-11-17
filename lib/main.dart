@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:test_aplikasi/Screens/login_screen.dart';
+import 'package:test_aplikasi/Screens/register_screen.dart';
 import 'package:test_aplikasi/auth/login.dart';
+// import 'package:test_aplikasi/auth/login1.dart';
 // import 'package:test_aplikasi/register.dart';
-import 'package:test_aplikasi/auth/register.dart';
+// import 'package:test_aplikasi/auth/register.dart';
 // import 'package:get/get.dart';
 // import 'package:http/http.dart' as http;
 
@@ -60,11 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onPressed: () {
                 // Get.To();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const LoginPage(title: "Login Page")));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+                // builder: (context) => LoginPage(
+                //       title: "Login",
+                //     )));
               },
               child: Text(
                 'Get Started',
@@ -82,7 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const RegisterPage(title: "Register Page")));
+                                // const RegisterPage(title: "Register Page")));
+                                const RegisterScreen()));
                   },
                   child: Text(
                     'Sign Up',
