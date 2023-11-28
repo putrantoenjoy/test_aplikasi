@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:presensi/models/home-response.dart';
+import 'package:presensi/setting-page.dart';
 import 'package:presensi/simpan-page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as myHttp;
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       'Authorization': 'Bearer ' + await _token
     };
     var response = await myHttp.get(
-        Uri.parse('https://punyawa.com/presensi/public/api/get-presensi'),
+        Uri.parse('http://127.0.0.1:8000/api/get-presensi'),
         headers: headres);
     homeResponseModel = HomeResponseModel.fromJson(json.decode(response.body));
     riwayat.clear();
@@ -87,43 +88,71 @@ class _HomePageState extends State<HomePage> {
                       height: 20,
                     ),
                     Container(
-                      width: 400,
-                      decoration: BoxDecoration(color: Colors.blue[800]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(children: [
-                          Text(hariIni?.tanggal ?? '-',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16)),
-                          SizedBox(
-                            height: 30,
+                      // height: 400,
+                      child: Center(
+                        child: Container(
+                          width: 400,
+                          // height: 500,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(66, 162, 232, 1),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromRGBO(66, 162, 232, 1),
+                                  spreadRadius: 5),
+                            ],
+                            // border: OutlineInputBorder(
+                            //   borderRadius: BorderRadius.circular(5),
+                            // ),
+                            // enabledBorder: OutlineInputBorder(
+                            //   borderRadius: BorderRadius.circular(5),
+                            //   borderSide: const BorderSide(
+                            //       color: Color.fromRGBO(66, 162, 232, 1),
+                            //       width: 0.0),
+                            // ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: [
-                                  Text(hariIni?.masuk ?? '-',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 24)),
-                                  Text("Masuk",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16))
-                                ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(children: [
+                              Text(hariIni?.tanggal ?? '-',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16)),
+                              SizedBox(
+                                height: 30,
                               ),
-                              Column(
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text(hariIni?.pulang ?? '-',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 24)),
-                                  Text("Pulang",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16))
+                                  Column(
+                                    children: [
+                                      Text(hariIni?.masuk ?? '-',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24)),
+                                      Text("Masuk",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16))
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(hariIni?.pulang ?? '-',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24)),
+                                      Text("Pulang",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16))
+                                    ],
+                                  )
                                 ],
                               )
-                            ],
-                          )
-                        ]),
+                            ]),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -155,21 +184,60 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    Row(
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => SimpanPage()))
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
+                          icon: Icon(Icons.book),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => HomePage()))
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
+                          icon: Icon(Icons.home),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => SettingPage()))
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
+                          icon: Icon(Icons.settings),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ));
             }
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => SimpanPage()))
-              .then((value) {
-            setState(() {});
-          });
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.of(context)
+      //         .push(MaterialPageRoute(builder: (context) => SimpanPage()))
+      //         .then((value) {
+      //       setState(() {});
+      //     });
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }

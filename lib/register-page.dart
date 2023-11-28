@@ -3,19 +3,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:presensi/home-page.dart';
 import 'package:http/http.dart' as myHttp;
+import 'package:presensi/login-page.dart';
 import 'package:presensi/models/login-response.dart';
-import 'package:presensi/register-page.dart';
+import 'package:presensi/models/register-response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   late Future<String> _name, _token;
@@ -50,19 +52,24 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future login(email, password) async {
-    LoginResponseModel? loginResponseModel;
-    Map<String, String> body = {"email": email, "password": password};
+  Future register(name, email, password) async {
+    RegisterResponseModel? registerResponseModel;
+    Map<String, String> body = {
+      "name": name,
+      "email": email,
+      "password": password
+    };
     var response = await myHttp
-        .post(Uri.parse('http://127.0.0.1:8000/api/login'), body: body);
+        .post(Uri.parse('http://127.0.0.1:8000/api/register'), body: body);
     if (response.statusCode == 401) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Email atau password salah")));
     } else {
-      loginResponseModel =
-          LoginResponseModel.fromJson(json.decode(response.body));
+      registerResponseModel =
+          RegisterResponseModel.fromJson(json.decode(response.body));
       print('HASIL ' + response.body);
-      saveUser(loginResponseModel.data.token, loginResponseModel.data.name);
+      saveUser(
+          registerResponseModel.data.token, registerResponseModel.data.name);
     }
   }
 
@@ -100,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: SizedBox(
                   width: 320,
                   child: Text(
-                    "Sign In",
+                    "Sign Up",
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -110,6 +117,29 @@ class _LoginPageState extends State<LoginPage> {
               )),
               SizedBox(height: 20),
               // Text("Email"),
+              Center(
+                child: SizedBox(
+                  width: 320,
+                  height: 50,
+                  child: TextFormField(
+                    controller: nameController,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      labelText: "Name",
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                            color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
               Center(
                 child: SizedBox(
                   width: 320,
@@ -170,6 +200,22 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account?"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
+                    },
+                    child: const Text("Sign In"),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -177,28 +223,14 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: Color(0xff42a2e8),
                   ),
                   onPressed: () {
-                    login(emailController.text, passwordController.text);
+                    register(nameController.text, emailController.text,
+                        passwordController.text);
                   },
                   child: const Text(
-                    "Login",
+                    "Register",
                     style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have account?"),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterPage()));
-                    },
-                    child: const Text("Sign Up"),
-                  ),
-                ],
               ),
             ],
           ),
