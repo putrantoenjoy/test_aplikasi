@@ -31,6 +31,7 @@ class _SettingPageState extends State<SettingPage> {
     });
 
     _name = _prefs.then((SharedPreferences prefs) {
+      print(prefs.getString('email'));
       return prefs.getString("name") ?? "";
     });
   }
@@ -87,6 +88,8 @@ class _SettingPageState extends State<SettingPage> {
     setState(() {
       preferences.remove("token");
       preferences.remove("name");
+      preferences.remove("email");
+      preferences.remove("id");
     });
     print("berhasil logout");
     _showSuccessSnackBar(context, 'Logout berhasil');
@@ -98,6 +101,12 @@ class _SettingPageState extends State<SettingPage> {
       ),
       (route) => false,
     );
+  }
+
+  Future getDataUser() async {
+    final Map<String, String> headres = {
+      'Authorization': 'Bearer ' + await _token
+    };
   }
 
   Future getData() async {
@@ -121,8 +130,11 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Setting"),
+      ),
       body: FutureBuilder(
-          future: getData(),
+          future: getDataUser(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -133,23 +145,6 @@ class _SettingPageState extends State<SettingPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FutureBuilder(
-                        future: _name,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else {
-                            if (snapshot.hasData) {
-                              print(snapshot.data);
-                              return Text(snapshot.data!,
-                                  style: TextStyle(fontSize: 18));
-                            } else {
-                              return Text("-", style: TextStyle(fontSize: 18));
-                            }
-                          }
-                        }),
                     SizedBox(
                       height: 20,
                     ),
@@ -173,7 +168,7 @@ class _SettingPageState extends State<SettingPage> {
                                           setState(() {});
                                         });
                                       },
-                                      child: Text("Change Profile")),
+                                      child: Text("Change Picture")),
                                 ),
                               ],
                             ),
@@ -186,42 +181,70 @@ class _SettingPageState extends State<SettingPage> {
                         child: Column(
                       children: [
                         Card(
+                            color: Color.fromRGBO(66, 162, 232, 1),
                             child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              Container(child: Text("My Profile")),
-                              Container(
-                                padding: EdgeInsets.only(left: 40, right: 40),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [Text("Pegawai")],
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Container(
+                                      child: Text("My Profile",
+                                          style:
+                                              TextStyle(color: Colors.white))),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(left: 40, right: 40),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Pegawai",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text("Pegawai",
+                                                style: TextStyle(
+                                                    color: Colors.white))
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text("Pegawai@gmail.com",
+                                                style: TextStyle(
+                                                    color: Colors.white))
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                    Row(
-                                      children: [Text("Pegawai")],
-                                    ),
-                                    Row(
-                                      children: [Text("Pegawai@gmail.com")],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        )),
+                                  )
+                                ],
+                              ),
+                            )),
                       ],
                     )),
                     SizedBox(height: 20),
-                    ElevatedButton(
-                        onPressed: null, child: Text("Change Password")),
-                    ElevatedButton(
-                        onPressed: null, child: Text("Change Email")),
-                    ElevatedButton(
-                        onPressed: () async {
-                          logOut();
-                        },
-                        child: Text("Logout"))
+                    Center(
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                              onPressed: null, child: Text("Change Name")),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                              onPressed: null, child: Text("Change Password")),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                              onPressed: () async {
+                                logOut();
+                              },
+                              child: Text("Logout"))
+                        ],
+                      ),
+                    ),
+
                     // Text("Riwayat Presensi"),
                     // Expanded(
                     //   child: ListView.builder(

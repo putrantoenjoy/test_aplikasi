@@ -1,21 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:presensi/forgot-page.dart';
 import 'package:presensi/home-page.dart';
 import 'package:http/http.dart' as myHttp;
 import 'package:presensi/models/login-response.dart';
 import 'package:presensi/register-page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class ForgotPage extends StatefulWidget {
+  const ForgotPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgotPage> createState() => _ForgotPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ForgotPageState extends State<ForgotPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -113,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: SizedBox(
                   width: 320,
                   child: Text(
-                    "Sign In",
+                    "Forgot Password",
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -145,68 +144,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              // Text("Password"),
-              Center(
-                child: SizedBox(
-                  width: 320,
-                  height: 50,
-                  child: TextFormField(
-                    controller: passwordController,
-                    // obscureText: true,
-                    obscureText: _obscurePassword,
-                    focusNode: _focusNodePassword,
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      prefixIcon: const Icon(Icons.password_outlined),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                          icon: _obscurePassword
-                              ? const Icon(Icons.visibility_outlined)
-                              : const Icon(Icons.visibility_off_outlined)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 10),
-              Center(
-                child: SizedBox(
-                  width: 320,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Remember me?",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ForgotPage()));
-                        },
-                        child: const Text("Forgot password?"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
               SizedBox(height: 10),
               Center(
                 child: ElevatedButton(
@@ -218,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                     login(emailController.text, passwordController.text);
                   },
                   child: const Text(
-                    "Login",
+                    "Send",
                     style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                   ),
                 ),
