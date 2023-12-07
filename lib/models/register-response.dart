@@ -40,6 +40,7 @@ class Data {
     required this.id,
     required this.name,
     required this.email,
+    required this.password,
     required this.emailVerifiedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -50,6 +51,7 @@ class Data {
   int id;
   String name;
   String email;
+  String password;
   dynamic emailVerifiedAt;
   DateTime createdAt;
   DateTime updatedAt;
@@ -60,6 +62,7 @@ class Data {
         id: json["id"],
         name: json["name"],
         email: json["email"],
+        password: json["password"],
         emailVerifiedAt: json["email_verified_at"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
@@ -71,6 +74,7 @@ class Data {
         "id": id,
         "name": name,
         "email": email,
+        "password": password,
         "email_verified_at": emailVerifiedAt,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),

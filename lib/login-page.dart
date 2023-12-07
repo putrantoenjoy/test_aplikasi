@@ -16,6 +16,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String _tes = '';
+  // String _password = '';
+  // String _name = '';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -55,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future login(email, password) async {
+    // print(_tes);
     LoginResponseModel? loginResponseModel;
     Map<String, String> body = {"email": email, "password": password};
     var response = await myHttp
@@ -177,6 +181,9 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _tes = value;
+                    },
                   ),
                 ),
               ),

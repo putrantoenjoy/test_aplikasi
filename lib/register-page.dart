@@ -15,28 +15,91 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
+const Map<String, String> headers = {"Content-Type": "application/json"};
+
+class AuthServices {
+  static Future<myHttp.Response> register(
+      String name, String email, String password) async {
+    Map data = {
+      "name": name,
+      "email": email,
+      "password": password,
+    };
+    var body = json.encode(data);
+    var url = Uri.parse('http://127.0.0.1:8000/api/register');
+    myHttp.Response response = await myHttp.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    print(response.body);
+    return response;
+  }
+}
+
 class _RegisterPageState extends State<RegisterPage> {
+  String _email = '';
+  String _password = '';
+  String _konfirmasipassword = '';
+  String _name = '';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  late Future<String> _name, _token;
+  // late Future<String> _name, _token;
   final FocusNode _focusNodePassword = FocusNode();
   bool _obscurePassword = true;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _token = _prefs.then((SharedPreferences prefs) {
-      return prefs.getString("token") ?? "";
-    });
+  createAccountPressed() async {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(_email);
+    if (emailValid) {
+      myHttp.Response response =
+          await AuthServices.register(_name, _email, _password);
+      Map responseMap = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final token = json.decode(response.body)['token'];
 
-    _name = _prefs.then((SharedPreferences prefs) {
-      return prefs.getString("name") ?? "";
-    });
-    checkToken(_token, _name);
+        //mengabil data user
+        final user = json.decode(response.body)['user'];
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('token', token);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => HomePage(
+                  // id: user['id'],
+                  // name: user['name'],
+                  // email: user['email'],
+                  // token: token,
+                  ),
+            ));
+      } else {
+        // errorSnackbar(context, responseMap.values.first[0]);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(responseMap.values.first[0])));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('email not valid')));
+      // errorSnackBar(context, 'email not valid');
+    }
   }
+
+  @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _token = _prefs.then((SharedPreferences prefs) {
+  //     return prefs.getString("token") ?? "";
+  //   });
+
+  //   _name = _prefs.then((SharedPreferences prefs) {
+  //     return prefs.getString("name") ?? "";
+  //   });
+  //   checkToken(_token, _name);
+  // }
 
   checkToken(token, name) async {
     String tokenStr = await token;
@@ -69,11 +132,14 @@ class _RegisterPageState extends State<RegisterPage> {
           RegisterResponseModel.fromJson(json.decode(response.body));
       print('HASIL ' + response.body);
       saveUser(
-          registerResponseModel.data.token, registerResponseModel.data.name);
+          registerResponseModel.data.token,
+          registerResponseModel.data.name,
+          registerResponseModel.data.email,
+          registerResponseModel.data.password);
     }
   }
 
-  Future saveUser(token, name) async {
+  Future saveUser(token, name, email, password) async {
     try {
       print("LEWAT SINI " + token + " | " + name);
       final SharedPreferences pref = await _prefs;
@@ -126,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       labelText: "Name",
-                      prefixIcon: const Icon(Icons.email_outlined),
+                      prefixIcon: const Icon(Icons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -136,6 +202,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _name = value;
+                    },
+                    validator: (value) {
+                      if (value == '' || value == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('nama tidak boleh kosong')));
+                      }
+                    },
                   ),
                 ),
               ),
@@ -159,6 +234,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _email = value;
+                    },
+                    validator: (value) {
+                      if (value == '' || value == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('email tidak boleh kosong')));
+                      }
+                    },
                   ),
                 ),
               ),
@@ -195,6 +279,58 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              // Text("Password"),
+              Center(
+                child: SizedBox(
+                  width: 320,
+                  height: 50,
+                  child: TextFormField(
+                    // controller: passwordController,
+                    // obscureText: true,
+                    obscureText: _obscurePassword,
+                    // focusNode: _focusNodePassword,
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                      labelText: "Konfirmasi Password",
+                      prefixIcon: const Icon(Icons.password_outlined),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                          icon: _obscurePassword
+                              ? const Icon(Icons.visibility_outlined)
+                              : const Icon(Icons.visibility_off_outlined)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                            color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      _konfirmasipassword = value;
+                    },
+                    // validator: (value) {
+                    //   if (value != _password) {
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //         SnackBar(content: Text('password tidak sama')));
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) => const RegisterPage()));
+                    //   } else {}
+                    // },
                   ),
                 ),
               ),
@@ -223,8 +359,22 @@ class _RegisterPageState extends State<RegisterPage> {
                     backgroundColor: Color(0xff42a2e8),
                   ),
                   onPressed: () {
-                    register(nameController.text, emailController.text,
-                        passwordController.text);
+                    if (_name == null ||
+                        _name == '' ||
+                        _email == null ||
+                        _email == '' ||
+                        _password == null ||
+                        _password == '' ||
+                        _konfirmasipassword == null ||
+                        _konfirmasipassword == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('kolom wajib diisi')));
+                    } else if (_konfirmasipassword != _password) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('password tidak sama')));
+                    } else {
+                      createAccountPressed();
+                    }
                   },
                   child: const Text(
                     "Register",
