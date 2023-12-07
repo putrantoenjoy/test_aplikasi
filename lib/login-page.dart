@@ -76,11 +76,10 @@ class _LoginPageState extends State<LoginPage> {
       print("LEWAT SINI " + token + " | " + name);
       final SharedPreferences pref = await _prefs;
       pref.setInt("id", id);
-      pref.setString("name", name);
-      // pref.setString("username", name);
       pref.setString("email", email);
+      // pref.setString("username", name);
+      pref.setString("name", name);
       pref.setString("token", token);
-      print('hasil');
       print(pref.get('id'));
       print(pref.get('name'));
       print(pref.get('email'));

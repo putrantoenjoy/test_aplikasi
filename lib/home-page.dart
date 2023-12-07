@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:presensi/cuti-page.dart';
 import 'package:presensi/history-page.dart';
 import 'package:presensi/models/home-response.dart';
 import 'package:presensi/setting-page.dart';
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   HomeResponseModel? homeResponseModel;
   Datum? hariIni;
   List<Datum> riwayat = [];
+  var absen = "00:00";
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     _name = _prefs.then((SharedPreferences prefs) {
       return prefs.getString("name") ?? "";
     });
+    // print(hariIni?.masuk);
   }
 
   Future getData() async {
@@ -47,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     homeResponseModel!.data.forEach((element) {
       if (element.isHariIni) {
         hariIni = element;
+        print(hariIni?.pulang);
       } else {
         riwayat.add(element);
       }
@@ -150,17 +154,37 @@ class _HomePageState extends State<HomePage> {
                             // Container(child: Image.asset('profil.jpg')),
                             SizedBox(height: 20),
                             Container(
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (context) => SimpanPage()))
-                                        .then((value) {
-                                      setState(() {});
-                                    });
-                                  },
-                                  child: Text("Check In")),
+                              child: hariIni?.pulang == null ||
+                                      hariIni?.pulang == absen
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SimpanPage()))
+                                            .then((value) {
+                                          setState(() {});
+                                        });
+                                      },
+                                      child: hariIni?.pulang == absen
+                                          ? Text("Check Out")
+                                          : Text("Check In"))
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      child: Text("Check Out")),
                             ),
+                            SizedBox(height: 20),
+                            Container(
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => CutiPage()))
+                                          .then((value) {
+                                        setState(() {});
+                                      });
+                                    },
+                                    child: Text("Ajukan Cuti"))),
                           ],
                         ),
                       ),

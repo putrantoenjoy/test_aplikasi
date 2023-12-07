@@ -39,6 +39,8 @@ dependencies:
   location: ^4.4.0
   syncfusion_flutter_maps: ^20.2.44
 
+  intl: ^0.17.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
