@@ -5,7 +5,7 @@ import 'package:presensi/home-page.dart';
 import 'package:http/http.dart' as myHttp;
 import 'package:presensi/login-page.dart';
 import 'package:presensi/models/login-response.dart';
-import 'package:presensi/models/register-response.dart';
+import 'package:presensi/models/cuti-response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CutiPage extends StatefulWidget {
@@ -13,6 +13,34 @@ class CutiPage extends StatefulWidget {
 
   @override
   State<CutiPage> createState() => _CutiPageState();
+}
+
+const Map<String, String> headers = {"Content-Type": "application/json"};
+
+class Cuti {
+  static Future<myHttp.Response> cuti(
+      String tanggalmulai,
+      String tanggalselesai,
+      String jeniscuti,
+      String keterangan,
+      String status) async {
+    Map data = {
+      "tanggal_mulai": tanggalmulai,
+      "tanggal_selesai": tanggalselesai,
+      "jenis_cuti": jeniscuti,
+      "keterangan": keterangan,
+      "status": status,
+    };
+    var body = json.encode(data);
+    var url = Uri.parse('http://127.0.0.1:8000/api/cuti');
+    myHttp.Response response = await myHttp.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    print(response.body);
+    return response;
+  }
 }
 
 const List<String> list = <String>[
@@ -29,28 +57,76 @@ const List<String> list = <String>[
 ];
 
 class _CutiPageState extends State<CutiPage> {
+  String _jeniscuti = '';
+  String _tanggalmulai = '';
+  String _tanggalselesai = '';
+  String _keterangan = '';
+  String _status = '';
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController dateinput = TextEditingController();
-  late Future<String> _name, _token;
-  final FocusNode _focusNodePassword = FocusNode();
-  bool _obscurePassword = true;
+
+  createAccountPressed() async {
+    myHttp.Response response = await Cuti.cuti(
+        _tanggalmulai, _tanggalselesai, _jeniscuti, _keterangan, _status);
+    Map responseMap = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final token = json.decode(response.body)['token'];
+
+      //mengabil data user
+      final user = json.decode(response.body)['user'];
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // await prefs.setString('token', token);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => HomePage(),
+          ));
+    } else {
+      // errorSnackbar(context, responseMap.values.first[0]);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(responseMap.values.first[0])));
+    }
+  }
 
   @override
-  void initState() {
-    dateinput.text = "";
-    // TODO: implement initState
-    super.initState();
-    _token = _prefs.then((SharedPreferences prefs) {
-      return prefs.getString("token") ?? "";
-    });
+  Future saveCuti() async {
+    try {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => CutiPage()))
+          .then((value) {
+        setState(() {});
+      });
+    } catch (err) {
+      print('ERROR :' + err.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(err.toString())));
+    }
+  }
 
-    _name = _prefs.then((SharedPreferences prefs) {
-      return prefs.getString("name") ?? "";
-    });
-    // checkToken(_token, _name);
+  Future cuti(
+      tanggalmulai, tanggalselesai, jeniscuti, keterangan, status) async {
+    // CutiResponseModel? CutiResponseModel;
+    CutiResponseModel? cutiResponseModel;
+    Map<String, String> body = {
+      "tanggal_mulai": tanggalmulai,
+      "tanggal_selesai": tanggalselesai,
+      "keterangan": keterangan,
+      "status": status,
+    };
+    var response = await myHttp
+        .post(Uri.parse('http://127.0.0.1:8000/api/cuti'), body: body);
+    if (response.statusCode == 401) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("error")));
+    } else {
+      cutiResponseModel =
+          CutiResponseModel.fromJson(json.decode(response.body));
+      saveCuti();
+    }
   }
 
   @override
@@ -125,6 +201,9 @@ class _CutiPageState extends State<CutiPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onSelected: (value) {
+                      _jeniscuti = value.toString();
+                    },
                     dropdownMenuEntries:
                         list.map<DropdownMenuEntry<String>>((String value) {
                       return DropdownMenuEntry<String>(
@@ -190,6 +269,9 @@ class _CutiPageState extends State<CutiPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _tanggalmulai = value;
+                    },
                   ),
                 ),
               ),
@@ -213,6 +295,9 @@ class _CutiPageState extends State<CutiPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _tanggalselesai = value;
+                    },
                   ),
                 ),
               ),
@@ -236,6 +321,9 @@ class _CutiPageState extends State<CutiPage> {
                             color: Color.fromRGBO(66, 162, 232, 1), width: 0.0),
                       ),
                     ),
+                    onChanged: (value) {
+                      _keterangan = value;
+                    },
                   ),
                 ),
               ),
